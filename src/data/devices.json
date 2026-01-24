@@ -1,0 +1,123 @@
+[
+    {
+      "id": 1,
+      "name": "iPhone 14 Pro",
+      "model": "A2890",
+      "price": 999,
+      "battery": 3200,
+      "camera": 48,
+      "storage": 256,
+      "image": "https://fdn2.gsmarena.com/vv/bigpic/apple-iphone-14-pro.jpg"
+    },
+    {
+      "id": 2,
+      "name": "Samsung Galaxy S23 Ultra",
+      "model": "SM-S918B",
+      "price": 1199,
+      "battery": 5000,
+      "camera": 200,
+      "storage": 256,
+      "image": "https://fdn2.gsmarena.com/vv/bigpic/samsung-galaxy-s23-ultra-5g.jpg"
+    },
+    {
+      "id": 3,
+      "name": "Google Pixel 8 Pro",
+      "model": "GC3VE",
+      "price": 899,
+      "battery": 5050,
+      "camera": 50,
+      "storage": 128,
+      "image": "https://fdn2.gsmarena.com/vv/bigpic/google-pixel-8-pro.jpg"
+    },
+    {
+      "id": 4,
+      "name": "OnePlus 12",
+      "model": "CPH2581",
+      "price": 799,
+      "battery": 5400,
+      "camera": 50,
+      "storage": 256,
+      "image": "https://fdn2.gsmarena.com/vv/bigpic/oneplus-12.jpg"
+    },
+    {
+      "id": 6,
+      "name": "Samsung Galaxy A54",
+      "model": "SM-A546E",
+      "price": 449,
+      "battery": 5000,
+      "camera": 50,
+      "storage": 128,
+      "image": "https://fdn2.gsmarena.com/vv/bigpic/samsung-galaxy-a54.jpg"
+    },
+    {
+      "id": 7,
+      "name": "iPhone 13",
+      "model": "A2633",
+      "price": 699,
+      "battery": 3227,
+      "camera": 12,
+      "storage": 128,
+      "image": "https://fdn2.gsmarena.com/vv/bigpic/apple-iphone-13.jpg"
+    },
+    {
+      "id": 8,
+      "name": "Google Pixel 7a",
+      "model": "GWKK3",
+      "price": 499,
+      "battery": 4385,
+      "camera": 64,
+      "storage": 128,
+      "image": "https://fdn2.gsmarena.com/vv/bigpic/google-pixel-7a.jpg"
+    },
+    {
+      "id": 10,
+      "name": "Xiaomi Redmi Note 13 Pro",
+      "model": "2312DRA50G",
+      "price": 399,
+      "battery": 5100,
+      "camera": 200,
+      "storage": 256,
+      "image": "https://fdn2.gsmarena.com/vv/bigpic/xiaomi-redmi-note-13-pro.jpg"
+    },
+    {
+      "id": 11,
+      "name": "Samsung Galaxy Z Flip 5",
+      "model": "SM-F731B",
+      "price": 999,
+      "battery": 3700,
+      "camera": 12,
+      "storage": 256,
+      "image": "https://fdn2.gsmarena.com/vv/bigpic/samsung-galaxy-z-flip5.jpg"
+    },
+    {
+      "id": 12,
+      "name": "Sony Xperia 1 V",
+      "model": "XQ-DQ54",
+      "price": 1099,
+      "battery": 5000,
+      "camera": 48,
+      "storage": 256,
+      "image": "https://fdn2.gsmarena.com/vv/bigpic/sony-xperia-1-v.jpg"
+    },
+    {
+      "id": 13,
+      "name": "Motorola Edge 40",
+      "model": "XT2303",
+      "price": 399,
+      "battery": 4400,
+      "camera": 50,
+      "storage": 128,
+      "image": "https://fdn2.gsmarena.com/vv/bigpic/motorola-edge-40.jpg"
+    },
+    {
+      "id": 15,
+      "name": "Huawei P60 Pro",
+      "model": "MNA-LX9",
+      "price": 899,
+      "battery": 4815,
+      "camera": 48,
+      "storage": 256,
+      "image": "https://fdn2.gsmarena.com/vv/bigpic/huawei-p60-pro.jpg"
+    }
+  ]
+  
