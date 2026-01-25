@@ -1,6 +1,13 @@
 import React from 'react';
+import { useCompare } from '../../context/CompareContext';
 
-const DeviceCard = ({ device, onAddToCompare, disabled }) => {
+const DeviceCard = ({ device }) => {
+  const { compareList, addToCompare } = useCompare();
+  
+  const isSelected = compareList.find(d => d.id === device.id);
+  const isFull = compareList.length >= 2;
+  const disabled = isFull && !isSelected;
+
   return (
     <div className="device-card">
       <img src={device.image} alt={device.name} className="device-image" />
@@ -13,8 +20,8 @@ const DeviceCard = ({ device, onAddToCompare, disabled }) => {
           <p><strong>Camera:</strong> {device.camera} MP</p>
           <p><strong>Storage:</strong> {device.storage} GB</p>
         </div>
-        <button onClick={() => onAddToCompare(device)} disabled={disabled} className="compare-button">
-          {disabled ? 'Added' : 'Add to Compare'}
+        <button onClick={() => addToCompare(device)} disabled={disabled || isSelected} className="compare-button">
+          {isSelected ? 'Added' : 'Add to Compare'}
         </button>
       </div>
     </div>
