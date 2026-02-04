@@ -21,9 +21,14 @@ export const CompareProvider = ({ children }) => {
     });
   };
 
+  const removeFromCompare = (deviceId) => {
+    setCompareList(prevList => prevList.filter(d => d.id !== deviceId));
+  };
+
   const value = {
     compareList,
     addToCompare,
+    removeFromCompare,
   };
 
   return (
