@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useCompare } from '../context/CompareContext';
+import ComparisonTable from '../components/compare/ComparisonTable';
 
 const ComparePage = () => {
   const { compareList } = useCompare();
@@ -14,14 +15,13 @@ const ComparePage = () => {
     );
   }
 
-  const [device1, device2] = compareList;
+  const [deviceA, deviceB] = compareList;
 
   return (
     <div className="compare-page">
-      <h1>{device1.name} vs {device2.name}</h1>
+      <h1>{deviceA.name} vs {deviceB.name}</h1>
       <div className="comparison-content">
-        {/* Placeholder for actual comparison content like RadarChart, AIComparison etc. */}
-        <p>Comparison details will be shown here.</p>
+        <ComparisonTable deviceA={deviceA} deviceB={deviceB} />
       </div>
       <Link to="/">Go back</Link>
     </div>
