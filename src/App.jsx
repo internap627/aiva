@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import Header from './components/layout/Header';
 import HomePage from './pages/HomePage';
 import ComparePage from './pages/ComparePage';
@@ -8,6 +8,9 @@ import { CompareProvider } from './context/CompareContext';
 import './App.css';
 
 function App() {
+  const location = useLocation();
+  const showCompareTray = location.pathname !== '/compare';
+
   return (
     <CompareProvider>
       <div className="app-container">
@@ -16,10 +19,11 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/compare" element={<ComparePage />} />
         </Routes>
-        <CompareTray />
+        {showCompareTray && <CompareTray />}
       </div>
     </CompareProvider>
   );
 }
 
 export default App;
+
