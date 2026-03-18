@@ -49,18 +49,22 @@ const ComparePage = () => {
   return (
     <div className="compare-page">
       <h1>{deviceA.name} vs {deviceB.name}</h1>
-      <div className="comparison-content">
+      
+      <div className="compare-section">
         <ComparisonTable deviceA={deviceA} deviceB={deviceB} />
       </div>
-      <div className="chart-container">
+
+      <div className="compare-section">
         <h2>Performance Radar</h2>
         <RadarChart scoresA={scoresA} scoresB={scoresB} nameA={deviceA.name} nameB={deviceB.name} />
       </div>
       
       {isComparisonStarted ? (
-        <AIComparison recommendation={recommendation} loading={loading} error={error} />
+        <div className="compare-section">
+          <AIComparison recommendation={recommendation} loading={loading} error={error} />
+        </div>
       ) : (
-        <div className="ai-recommendation-start">
+        <div className="compare-section ai-recommendation-start">
           <h2>AI-Powered Comparison</h2>
           <p>Let our AI analyze these devices and give you a head-to-head summary.</p>
           <button onClick={handleFetchRecommendation} className="cta-button">

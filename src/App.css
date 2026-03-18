@@ -200,23 +200,45 @@
 /* Compare Page styles */
 .compare-page {
   padding: 20px;
-  text-align: center;
+  background-color: #f8f9fa; /* Light background for the page */
 }
 
 .compare-page h1 {
+  text-align: center;
   font-size: 2.5rem;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 }
 
-.comparison-content {
-  margin-top: 40px;
+.compare-section {
+  background-color: #ffffff;
+  border: 1px solid #e9ecef;
+  border-radius: 12px;
+  padding: 30px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  text-align: left; /* Default for content inside */
+}
+
+.compare-section h2 {
+  text-align: center;
+  font-size: 1.8rem;
+  margin-top: 0;
+  margin-bottom: 25px;
+  color: #343a40;
+}
+
+.ai-section {
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 /* Comparison Table styles */
 .comparison-table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 20px;
 }
 
 .comparison-table th, .comparison-table td {
@@ -227,6 +249,7 @@
 .comparison-table th {
   background-color: #f8f9fa;
   font-size: 1.2rem;
+  text-align: center;
 }
 
 .spec-group-header td {
@@ -238,7 +261,6 @@
 .spec-label {
   font-size: 0.9rem;
   color: #6c757d;
-  text-align: left;
 }
 
 .spec-value {
@@ -252,25 +274,16 @@
   font-weight: bold;
 }
 
-/* Chart Container styles */
-.chart-container {
-  margin-top: 50px;
-}
-
-.chart-container h2 {
-  font-size: 2rem;
-  margin-bottom: 20px;
-}
-
 /* AI Recommendation styles */
-.ai-recommendation {
-  margin-top: 50px;
+.ai-recommendation, .ai-recommendation-start {
+  width: 100%;
   text-align: center;
+  margin-top: 0;
 }
 
-.ai-recommendation h2 {
-  font-size: 2rem;
-  margin-bottom: 20px;
+.ai-recommendation h2, .ai-recommendation-start h2 {
+  font-size: 1.8rem;
+  margin-bottom: 25px;
 }
 
 .loader-container {
@@ -301,7 +314,7 @@
   line-height: 1.6;
   max-width: 800px;
   margin: 0 auto;
-  background-color: #f8f9fa;
+  background-color: #f0f7ff;
   padding: 20px;
   border-radius: 8px;
   border-left: 5px solid #3498db;
@@ -310,6 +323,22 @@
 
 .error-message {
   color: #dc3545;
+}
+
+.cta-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold;
+  transition: background-color 0.2s;
+}
+
+.cta-button:hover {
+  background-color: #0056b3;
 }
 
 /* Homepage Header */
