@@ -1,7 +1,7 @@
 import React from 'react';
 import { Radar, RadarChart, PolarGrid, Legend, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from 'recharts';
 
-const RadarChartComponent = ({ scoresA, scoresB, nameA, nameB }) => {
+const RadarChartComponent = ({ scoresA, scoresB, nameA, nameB, height = 400, compact = false }) => {
   const data = [
     { subject: 'Price', A: scoresA.price, B: scoresB.price, fullMark: 100 },
     { subject: 'Battery', A: scoresA.battery, B: scoresB.battery, fullMark: 100 },
@@ -10,8 +10,8 @@ const RadarChartComponent = ({ scoresA, scoresB, nameA, nameB }) => {
   ];
 
   return (
-    <ResponsiveContainer width="100%" height={400}>
-      <RadarChart cx="50%" cy="50%" outerRadius="80%" data={data}>
+    <ResponsiveContainer width="100%" height={height}>
+      <RadarChart cx="50%" cy="48%" outerRadius={compact ? '65%' : '80%'} data={data}>
         <PolarGrid />
         <PolarAngleAxis dataKey="subject" />
         <PolarRadiusAxis angle={30} domain={[0, 100]} />
