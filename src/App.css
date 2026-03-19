@@ -217,6 +217,20 @@
   text-align: center;
 }
 
+.compare-page-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+.share-hint {
+  max-width: 720px;
+  margin: 0;
+  color: #6c757d;
+  text-align: center;
+}
+
 .comparison-export {
   display: flex;
   flex-direction: column;
@@ -369,9 +383,24 @@
   flex-shrink: 0;
 }
 
+.share-button {
+  background-color: #111111;
+}
+
+.share-button:hover {
+  background-color: #000000;
+}
+
 .compare-download-error {
   margin-top: -10px;
   margin-bottom: 20px;
+  text-align: center;
+}
+
+.share-status-message {
+  margin-top: -10px;
+  margin-bottom: 20px;
+  color: #1f7a1f;
   text-align: center;
 }
 
@@ -384,9 +413,18 @@
   padding: 24px;
 }
 
+.comparison-export.social-export {
+  max-width: 940px;
+  margin: 0 auto;
+}
+
 @media (max-width: 768px) {
   .compare-page-header {
     align-items: stretch;
+  }
+
+  .compare-page-actions {
+    flex-direction: column;
   }
 
   .compare-page h1 {

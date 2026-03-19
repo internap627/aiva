@@ -15,7 +15,11 @@ const ComparePage = () => {
   const [isComparisonStarted, setIsComparisonStarted] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
   const [isPreparingPdf, setIsPreparingPdf] = useState(false);
+  const [isSharingToX, setIsSharingToX] = useState(false);
+  const [isPreparingShare, setIsPreparingShare] = useState(false);
   const [downloadError, setDownloadError] = useState(null);
+  const [shareError, setShareError] = useState(null);
+  const [shareStatus, setShareStatus] = useState('');
   const comparisonRef = useRef(null);
 
   useEffect(() => {
@@ -34,6 +38,38 @@ const ComparePage = () => {
   const [deviceA, deviceB] = compareList;
   const scoresA = calculateScores(deviceA);
   const scoresB = calculateScores(deviceB);
+  const isPreparingExport = isPreparingPdf || isPreparingShare;
+
+  const createExportBaseFilename = () =>
+    `${deviceA.name}-vs-${deviceB.name}`
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-|-$/g, '');
+
+  const buildShareText = () => {
+    const totalA = Object.values(scoresA).reduce((sum, value) => sum + value, 0);
+    const totalB = Object.values(scoresB).reduce((sum, value) => sum + value, 0);
+    const winnerText = totalA === totalB
+      ? 'This one is too close to call.'
+      : `${totalA > totalB ? deviceA.name : deviceB.name} edges ahead overall.`;
+
+    return [
+      `Comparing ${deviceA.name} vs ${deviceB.name} on AIVA.`,
+      winnerText,
+      `Price: $${deviceA.price} vs $${deviceB.price}.`,
+      `Battery: ${deviceA.battery}mAh vs ${deviceB.battery}mAh.`,
+      '#AIVA #Tech',
+    ].join(' ');
+  };
+
+  const downloadBlob = (blob, fileName) => {
+    const objectUrl = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = objectUrl;
+    link.download = fileName;
+    link.click();
+    URL.revokeObjectURL(objectUrl);
+  };
 
   const handleFetchRecommendation = async () => {
     setIsComparisonStarted(true);
@@ -63,10 +99,7 @@ const ComparePage = () => {
       await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 
       const { default: html2pdf } = await import('html2pdf.js');
-      const baseFilename = `${deviceA.name}-vs-${deviceB.name}`
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/^-|-$/g, '');
+      const baseFilename = createExportBaseFilename();
 
       await html2pdf()
         .set({
@@ -97,24 +130,103 @@ const ComparePage = () => {
     }
   };
 
+  const handleShareToX = async () => {
+    if (!comparisonRef.current) {
+      return;
+    }
+
+    const shareWindow = window.open('', '_blank');
+
+    setShareError(null);
+    setShareStatus('');
+    setIsSharingToX(true);
+    setIsPreparingShare(true);
+
+    try {
+      await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
+      const { toBlob } = await import('html-to-image');
+      const imageBlob = await toBlob(comparisonRef.current, {
+        cacheBust: true,
+        backgroundColor: '#f8f9fa',
+        pixelRatio: 2,
+      });
+
+      if (!imageBlob) {
+        throw new Error('Unable to create the share image right now.');
+      }
+
+      const shareText = buildShareText();
+      const baseFilename = createExportBaseFilename();
+      const shareUrl = new URL('https://twitter.com/intent/tweet');
+      shareUrl.searchParams.set('text', shareText);
+
+      downloadBlob(imageBlob, `${baseFilename || 'device-comparison'}-share.png`);
+
+      let copiedText = false;
+      if (navigator.clipboard?.writeText) {
+        try {
+          await navigator.clipboard.writeText(shareText);
+          copiedText = true;
+        } catch {
+          copiedText = false;
+        }
+      }
+
+      if (shareWindow) {
+        shareWindow.location.href = shareUrl.toString();
+      } else {
+        window.open(shareUrl.toString(), '_blank', 'noopener,noreferrer');
+      }
+
+      setShareStatus(
+        copiedText
+          ? 'X composer opened, share text copied, and the image was downloaded for attachment.'
+          : 'X composer opened and the image was downloaded for attachment.'
+      );
+    } catch (err) {
+      if (shareWindow) {
+        shareWindow.close();
+      }
+      setShareError(err.message || 'Unable to prepare the X share right now.');
+    } finally {
+      setIsPreparingShare(false);
+      setIsSharingToX(false);
+    }
+  };
+
   return (
     <div className="compare-page">
       <div className="compare-page-header">
         <h1>{deviceA.name} vs {deviceB.name}</h1>
-        <button
-          onClick={handleDownloadComparison}
-          className="cta-button download-button"
-          disabled={isDownloading}
-        >
-          {isDownloading ? 'Preparing PDF...' : 'Download Comparison'}
-        </button>
+        <div className="compare-page-actions">
+          <button
+            onClick={handleDownloadComparison}
+            className="cta-button download-button"
+            disabled={isDownloading || isSharingToX}
+          >
+            {isDownloading ? 'Preparing PDF...' : 'Download Comparison'}
+          </button>
+          <button
+            onClick={handleShareToX}
+            className="cta-button share-button"
+            disabled={isDownloading || isSharingToX}
+          >
+            {isSharingToX ? 'Preparing X Share...' : 'Share to X'}
+          </button>
+        </div>
+        <p className="share-hint">
+          This creates a share image, downloads it, and opens X with prefilled text so the image can be attached.
+        </p>
       </div>
 
       {downloadError && <p className="error-message compare-download-error">{downloadError}</p>}
+      {shareError && <p className="error-message compare-download-error">{shareError}</p>}
+      {shareStatus && <p className="share-status-message">{shareStatus}</p>}
 
       <div
         ref={comparisonRef}
-        className={`comparison-export${isPreparingPdf ? ' pdf-export' : ''}`}
+        className={`comparison-export${isPreparingExport ? ' pdf-export' : ''}${isPreparingShare ? ' social-export' : ''}`}
       >
         <div className="compare-section">
           <ComparisonTable deviceA={deviceA} deviceB={deviceB} />
@@ -127,8 +239,8 @@ const ComparePage = () => {
             scoresB={scoresB}
             nameA={deviceA.name}
             nameB={deviceB.name}
-            height={isPreparingPdf ? 300 : 400}
-            compact={isPreparingPdf}
+            height={isPreparingExport ? 300 : 400}
+            compact={isPreparingExport}
           />
         </div>
 
