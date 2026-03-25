@@ -183,6 +183,20 @@
   color: #6c757d;
 }
 
+.compare-tray-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.compare-limit-message {
+  margin: 0;
+  color: #dc3545;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
 .compare-now-btn {
   background-color: #28a745;
   color: white;
@@ -229,6 +243,10 @@
   margin: 0;
   color: #6c757d;
   text-align: center;
+}
+
+.compare-page-limit-message {
+  margin-bottom: 16px;
 }
 
 .comparison-export {
@@ -419,6 +437,16 @@
 }
 
 @media (max-width: 768px) {
+  .compare-tray {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .compare-tray-actions {
+    align-items: stretch;
+  }
+
   .compare-page-header {
     align-items: stretch;
   }

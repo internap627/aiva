@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useCompare } from '../../context/CompareContext';
 
 const CompareTray = () => {
-  const { compareList, removeFromCompare } = useCompare();
+  const { compareList, removeFromCompare, isAiCompareRateLimited, compareCooldownSeconds } = useCompare();
   const navigate = useNavigate();
 
   const handleCompare = () => {
@@ -29,13 +29,20 @@ const CompareTray = () => {
           </div>
         )}
       </div>
-      <button 
-        onClick={handleCompare} 
-        disabled={compareList.length !== 2} 
-        className="compare-now-btn"
-      >
-        Compare Now
-      </button>
+      <div className="compare-tray-actions">
+        {isAiCompareRateLimited && (
+          <p className="compare-limit-message">
+            AI comparison cooldown: wait {compareCooldownSeconds}s.
+          </p>
+        )}
+        <button
+          onClick={handleCompare}
+          disabled={compareList.length !== 2 || isAiCompareRateLimited}
+          className="compare-now-btn"
+        >
+          {isAiCompareRateLimited ? `Wait ${compareCooldownSeconds}s` : 'Compare Now'}
+        </button>
+      </div>
     </div>
   );
 };

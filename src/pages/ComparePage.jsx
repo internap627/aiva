@@ -8,7 +8,12 @@ import { calculateScores } from '../utils/deviceUtils';
 import { fetchAIRecommendation } from '../services/api';
 
 const ComparePage = () => {
-  const { compareList } = useCompare();
+  const {
+    compareList,
+    isAiCompareRateLimited,
+    compareCooldownSeconds,
+    recordAiCompareRequest,
+  } = useCompare();
   const [recommendation, setRecommendation] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -72,8 +77,14 @@ const ComparePage = () => {
   };
 
   const handleFetchRecommendation = async () => {
+    if (isAiCompareRateLimited) {
+      setError(`Too many AI comparisons. Please wait ${compareCooldownSeconds}s and try again.`);
+      return;
+    }
+
     setIsComparisonStarted(true);
     setError(null);
+    recordAiCompareRequest();
 
     try {
       setLoading(true);
@@ -215,9 +226,6 @@ const ComparePage = () => {
             {isSharingToX ? 'Preparing X Share...' : 'Share to X'}
           </button>
         </div>
-        <p className="share-hint">
-          This creates a share image, downloads it, and opens X with prefilled text so the image can be attached.
-        </p>
       </div>
 
       {downloadError && <p className="error-message compare-download-error">{downloadError}</p>}
@@ -252,8 +260,17 @@ const ComparePage = () => {
           <div className="compare-section ai-recommendation-start">
             <h2>AI-Powered Comparison</h2>
             <p>Let our AI analyze these devices and give you a head-to-head summary.</p>
-            <button onClick={handleFetchRecommendation} className="cta-button">
-              Get AI Comparison
+            {isAiCompareRateLimited && (
+              <p className="compare-limit-message compare-page-limit-message">
+                AI comparison limit reached. Please wait {compareCooldownSeconds}s before trying again.
+              </p>
+            )}
+            <button
+              onClick={handleFetchRecommendation}
+              className="cta-button"
+              disabled={loading || isAiCompareRateLimited}
+            >
+              {isAiCompareRateLimited ? `Wait ${compareCooldownSeconds}s` : 'Get AI Comparison'}
             </button>
           </div>
         )}
