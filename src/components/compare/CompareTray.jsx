@@ -14,20 +14,29 @@ const CompareTray = () => {
 
   return (
     <div className={`compare-tray ${isVisible ? 'visible' : ''}`}>
-      <div className="tray-items">
-        {compareList.map(device => (
-          <div key={device.id} className="tray-item">
-            <span>{device.name}</span>
-            <button onClick={() => removeFromCompare(device.id)} className="remove-item-btn">
-              &times;
-            </button>
-          </div>
-        ))}
-         {compareList.length < 2 && (
-          <div className="tray-placeholder">
-            {compareList.length === 0 ? 'Select up to 2 devices to compare' : 'Select 1 more device'}
-          </div>
-        )}
+      <div className="tray-copy">
+        <div className="tray-heading">
+          <h2>Comparison Tray</h2>
+          <span className="status-chip">{compareList.length}/2 Selected</span>
+        </div>
+        <div className="tray-items">
+          {compareList.map(device => (
+            <div key={device.id} className="tray-item">
+              <span>{device.name}</span>
+              <button onClick={() => removeFromCompare(device.id)} className="remove-item-btn">
+                &times;
+              </button>
+            </div>
+          ))}
+          {compareList.length < 2 && (
+            <div className="tray-placeholder">
+              {compareList.length === 0 ? 'Select up to 2 devices to compare' : 'Select 1 more device'}
+            </div>
+          )}
+        </div>
+        <ul className="tray-notes">
+          <li>Build a side-by-side comparison with chart, AI insight, and pricing callouts.</li>
+        </ul>
       </div>
       <div className="compare-tray-actions">
         {isAiCompareRateLimited && (

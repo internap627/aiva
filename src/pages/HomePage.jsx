@@ -42,17 +42,35 @@ function HomePage() {
 
   return (
     <main className="homepage">
-      <div className="homepage-header">
-        <h1 className="homepage-title">Choose Devices to Compare</h1>
-        <p className="homepage-subtitle">
-          Select up to two devices from the list below to see a side-by-side comparison.
-        </p>
-      </div>
-      <div className="search-and-filter-container">
-        <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-        <FilterPanel filters={filters} setFilters={setFilters} devices={devices} />
-      </div>
-      <DeviceGrid devices={filteredDevices} />
+      <section className="hero-card">
+        <p className="hero-eyebrow">AI Device Matchups</p>
+        <h1 className="homepage-title">AIVA</h1>
+        <p className="hero-tagline">Compare phones faster, with cleaner signals and clearer decisions.</p>
+        <ul className="hero-points">
+          <li>Pick any two devices for a direct side-by-side review.</li>
+          <li>Use filters to narrow by price, storage, or camera strength.</li>
+          <li>Open the compare page for radar visuals, AI insight, and price value tags.</li>
+        </ul>
+      </section>
+
+      <section className="poster-card">
+        <div className="card-header">
+          <h2>Device Selection</h2>
+        </div>
+        <div className="card-body device-selection-layout">
+          <p className="section-kicker">Build Your Comparison</p>
+          <ul className="section-points">
+            <li>Select up to two devices from the grid.</li>
+            <li>Use the floating tray to jump straight into the comparison view.</li>
+          </ul>
+
+          <div className="search-and-filter-container">
+            <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+            <FilterPanel filters={filters} setFilters={setFilters} devices={devices} />
+          </div>
+          <DeviceGrid devices={filteredDevices} />
+        </div>
+      </section>
     </main>
   );
 }

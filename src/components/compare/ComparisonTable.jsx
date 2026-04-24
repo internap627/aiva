@@ -2,17 +2,17 @@ import React from 'react';
 import { getBrand } from '../../utils/deviceUtils';
 
 const specs = {
-  '📱 General': [
-    { key: 'brand', label: 'Brand', higherIsBetter: false },
+  General: [
+    { key: 'brand', label: 'Brand', higherIsBetter: null },
     { key: 'price', label: 'Price', unit: '$', higherIsBetter: false },
   ],
-  '⚡ Performance': [
+  Performance: [
     { key: 'storage', label: 'Storage', unit: 'GB', higherIsBetter: true },
   ],
-  '🔋 Battery': [
+  Battery: [
     { key: 'battery', label: 'Capacity', unit: 'mAh', higherIsBetter: true },
   ],
-  '📸 Camera': [
+  Camera: [
     { key: 'camera', label: 'Main Camera', unit: 'MP', higherIsBetter: true },
   ],
 };
@@ -51,16 +51,16 @@ const ComparisonTable = ({ deviceA, deviceB }) => {
             {specItems.map(spec => {
               const valueA = getSpecValue(deviceA, spec.key);
               const valueB = getSpecValue(deviceB, spec.key);
-              const better = getBetterSpec(spec, deviceA[spec.key], deviceB[spec.key]);
+              const better = getBetterSpec(spec, valueA, valueB);
 
               return (
                 <tr key={spec.key}>
                   <td className="spec-label">{spec.label}</td>
                   <td className={`spec-value ${better === 'a' ? 'highlight' : ''}`}>
-                    {valueA} {spec.unit}
+                    {valueA}{spec.unit ? ` ${spec.unit}` : ''}
                   </td>
                   <td className={`spec-value ${better === 'b' ? 'highlight' : ''}`}>
-                    {valueB} {spec.unit}
+                    {valueB}{spec.unit ? ` ${spec.unit}` : ''}
                   </td>
                 </tr>
               );

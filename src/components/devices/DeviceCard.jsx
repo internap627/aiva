@@ -9,17 +9,23 @@ const DeviceCard = ({ device }) => {
   const disabled = isFull && !isSelected;
 
   return (
-    <div className="device-card">
-      <img src={device.image} alt={device.name} className="device-image" />
+    <div className={`device-card${isSelected ? ' is-selected' : ''}`}>
+      <div className="device-image-shell">
+        <img src={device.image} alt={device.name} className="device-image" />
+      </div>
       <div className="device-info">
-        <h3>{device.name}</h3>
-        <p className="device-model">{device.model}</p>
-        <div className="device-specs">
-          <p><strong>Price:</strong> ${device.price}</p>
-          <p><strong>Battery:</strong> {device.battery} mAh</p>
-          <p><strong>Camera:</strong> {device.camera} MP</p>
-          <p><strong>Storage:</strong> {device.storage} GB</p>
+        <div className="device-name-row">
+          <div>
+            <h3>{device.name}</h3>
+            <p className="device-model">{device.model}</p>
+          </div>
+          <span className="device-price-chip">${device.price}</span>
         </div>
+        <ul className="device-highlights">
+          <li><strong>Battery:</strong> {device.battery} mAh</li>
+          <li><strong>Camera:</strong> {device.camera} MP</li>
+          <li><strong>Storage:</strong> {device.storage} GB</li>
+        </ul>
         <button onClick={() => addToCompare(device)} disabled={disabled || isSelected} className="compare-button">
           {isSelected ? 'Added' : 'Add to Compare'}
         </button>

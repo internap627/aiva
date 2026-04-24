@@ -4,6 +4,7 @@ import { useCompare } from '../context/CompareContext';
 import ComparisonTable from '../components/compare/ComparisonTable';
 import RadarChart from '../components/compare/RadarChart';
 import AIComparison from '../components/compare/AIComparison';
+import PriceEvaluationBadge from '../components/compare/PriceEvaluationBadge';
 import { calculateScores } from '../utils/deviceUtils';
 import { fetchAIRecommendation } from '../services/api';
 
@@ -34,8 +35,15 @@ const ComparePage = () => {
   if (compareList.length < 2) {
     return (
       <div className="compare-page">
-        <h1>Please select two devices to compare</h1>
-        <Link to="/">Go back to selection</Link>
+        <div className="hero-card compare-empty-state">
+          <p className="hero-eyebrow">Comparison Needed</p>
+          <h1>Select Two Devices</h1>
+          <ul className="hero-points">
+            <li>Pick any two phones from the selection grid.</li>
+            <li>Use the floating tray to open the comparison view.</li>
+          </ul>
+          <Link to="/" className="back-link">Go back to selection</Link>
+        </div>
       </div>
     );
   }
@@ -50,6 +58,24 @@ const ComparePage = () => {
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/^-|-$/g, '');
+
+  const getLeadingDevice = () => {
+    const totalA = Object.values(scoresA).reduce((sum, value) => sum + value, 0);
+    const totalB = Object.values(scoresB).reduce((sum, value) => sum + value, 0);
+
+    if (totalA === totalB) {
+      return 'Even matchup';
+    }
+
+    return totalA > totalB ? deviceA.name : deviceB.name;
+  };
+
+  const buildOverviewSpecs = (device) => [
+    { label: 'Price', value: `$${device.price}` },
+    { label: 'Battery', value: `${device.battery} mAh` },
+    { label: 'Camera', value: `${device.camera} MP` },
+    { label: 'Storage', value: `${device.storage} GB` },
+  ];
 
   const buildShareText = () => {
     const totalA = Object.values(scoresA).reduce((sum, value) => sum + value, 0);
@@ -226,57 +252,142 @@ const ComparePage = () => {
             {isSharingToX ? 'Preparing X Share...' : 'Share to X'}
           </button>
         </div>
+        <ul className="section-points">
+          <li>Read the side-by-side overview first, then use the radar for visual balance.</li>
+          <li>Run the AI summary for a short recommendation and scan the price insight badges last.</li>
+        </ul>
       </div>
 
-      {downloadError && <p className="error-message compare-download-error">{downloadError}</p>}
-      {shareError && <p className="error-message compare-download-error">{shareError}</p>}
-      {shareStatus && <p className="share-status-message">{shareStatus}</p>}
+      <div className="compare-feedback">
+        {downloadError && <p className="error-message compare-download-error">{downloadError}</p>}
+        {shareError && <p className="error-message compare-download-error">{shareError}</p>}
+        {shareStatus && <p className="share-status-message">{shareStatus}</p>}
+      </div>
 
       <div
         ref={comparisonRef}
         className={`comparison-export${isPreparingExport ? ' pdf-export' : ''}${isPreparingShare ? ' social-export' : ''}`}
       >
-        <div className="compare-section">
-          <ComparisonTable deviceA={deviceA} deviceB={deviceB} />
-        </div>
-
-        <div className="compare-section radar-section">
-          <h2>Performance Radar</h2>
-          <RadarChart
-            scoresA={scoresA}
-            scoresB={scoresB}
-            nameA={deviceA.name}
-            nameB={deviceB.name}
-            height={isPreparingExport ? 300 : 400}
-            compact={isPreparingExport}
-          />
-        </div>
-
-        {isComparisonStarted ? (
-          <div className="compare-section">
-            <AIComparison recommendation={recommendation} loading={loading} error={error} />
+        <section className="poster-card">
+          <div className="card-header">
+            <h2>Section 1: Comparison Overview</h2>
           </div>
-        ) : (
-          <div className="compare-section ai-recommendation-start">
-            <h2>AI-Powered Comparison</h2>
-            <p>Let our AI analyze these devices and give you a head-to-head summary.</p>
-            {isAiCompareRateLimited && (
-              <p className="compare-limit-message compare-page-limit-message">
-                AI comparison limit reached. Please wait {compareCooldownSeconds}s before trying again.
-              </p>
+          <div className="card-body">
+            <p className="section-kicker">Device A vs Device B</p>
+            <ul className="section-points">
+              <li>Current edge: {getLeadingDevice()}.</li>
+              <li>Use these summary cards for the fastest side-by-side read.</li>
+            </ul>
+
+            <div className="comparison-overview-grid">
+              {[deviceA, deviceB].map((device, index) => (
+                <article key={device.id} className="overview-card">
+                  <div className="overview-card-header">
+                    <div>
+                      <h3>{index === 0 ? 'Device A' : 'Device B'}</h3>
+                      <p>{device.name}</p>
+                      <p className="device-model">{device.model}</p>
+                    </div>
+                    <span className="score-chip">
+                      Score {Math.round(Object.values(index === 0 ? scoresA : scoresB).reduce((sum, value) => sum + value, 0) / 4)}
+                    </span>
+                  </div>
+                  <div className="quick-spec-grid">
+                    {buildOverviewSpecs(device).map((spec) => (
+                      <div key={spec.label} className="quick-spec">
+                        <span className="quick-spec-label">{spec.label}</span>
+                        <span className="quick-spec-value">{spec.value}</span>
+                      </div>
+                    ))}
+                  </div>
+                </article>
+              ))}
+            </div>
+
+            <div className="visual-card table-card">
+              <h3>Detailed Spec Breakdown</h3>
+              <ComparisonTable deviceA={deviceA} deviceB={deviceB} />
+            </div>
+          </div>
+        </section>
+
+        <section className="poster-card radar-section">
+          <div className="card-header">
+            <h2>Section 2: Visual Comparison</h2>
+          </div>
+          <div className="card-body">
+            <div className="visual-card">
+              <div className="visual-card-copy">
+                <h3>Performance Radar</h3>
+                <ul className="section-points">
+                  <li>The wider shape usually signals stronger balance across key specs.</li>
+                  <li>Light blue and dark blue keep the comparison readable in screenshots.</li>
+                </ul>
+              </div>
+              <RadarChart
+                scoresA={scoresA}
+                scoresB={scoresB}
+                nameA={deviceA.name}
+                nameB={deviceB.name}
+                height={isPreparingExport ? 340 : 400}
+                compact={isPreparingExport}
+              />
+            </div>
+          </div>
+        </section>
+
+        <section className="poster-card">
+          <div className="card-header">
+            <h2>Section 3: AI Insight</h2>
+          </div>
+          <div className="card-body section-stack">
+            {isComparisonStarted ? (
+              <AIComparison recommendation={recommendation} loading={loading} error={error} />
+            ) : (
+              <div className="ai-recommendation-start">
+                <p className="section-kicker">Result Card</p>
+                <ul className="section-points">
+                  <li>Generate a short recommendation focused on typical user value.</li>
+                  <li>The response is formatted for quick scanning rather than dense reading.</li>
+                </ul>
+                {isAiCompareRateLimited && (
+                  <p className="compare-limit-message compare-page-limit-message">
+                    AI comparison limit reached. Please wait {compareCooldownSeconds}s before trying again.
+                  </p>
+                )}
+                <button
+                  onClick={handleFetchRecommendation}
+                  className="cta-button"
+                  disabled={loading || isAiCompareRateLimited}
+                >
+                  {isAiCompareRateLimited ? `Wait ${compareCooldownSeconds}s` : 'Get AI Comparison'}
+                </button>
+              </div>
             )}
-            <button
-              onClick={handleFetchRecommendation}
-              className="cta-button"
-              disabled={loading || isAiCompareRateLimited}
-            >
-              {isAiCompareRateLimited ? `Wait ${compareCooldownSeconds}s` : 'Get AI Comparison'}
-            </button>
           </div>
-        )}
+        </section>
+
+        <section className="poster-card">
+          <div className="card-header">
+            <h2>Section 4: Price Insight</h2>
+          </div>
+          <div className="card-body">
+            <p className="section-kicker">Value Read</p>
+            <ul className="section-points">
+              <li>Badges show whether each device looks underpriced, fair, or overpriced.</li>
+              <li>The score blends normalized performance and price-friendliness.</li>
+            </ul>
+            <div className="price-insight-grid">
+              <PriceEvaluationBadge device={deviceA} scores={scoresA} />
+              <PriceEvaluationBadge device={deviceB} scores={scoresB} />
+            </div>
+          </div>
+        </section>
       </div>
 
-      <Link to="/">Go back</Link>
+      <div className="compare-page-footer">
+        <Link to="/" className="back-link">Go back</Link>
+      </div>
     </div>
   );
 };
